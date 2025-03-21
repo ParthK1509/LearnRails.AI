@@ -8,7 +8,10 @@ export default function Home() {
       </div>
       <div className="main">
         <p className="whichTopic">Which Topic are we learning today?</p>
-        <input type="text" />
+      <div className="searchbar">
+      <input type="text" placeholder="e.g. Rigid Body Dynamics"/>
+      <button>Search</button>
+      </div>
       </div>
     </div>
   );
