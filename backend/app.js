@@ -24,6 +24,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/llm', llmRouter);
 
+console.log('app.js: process.env.NODE_ENV:', process.env.NODE_ENV);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
