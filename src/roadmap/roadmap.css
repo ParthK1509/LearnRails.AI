@@ -1,0 +1,61 @@
+@font-face {
+  font-family: "Golos";
+  src: local("MyFont"), url(./fonts/golos.ttf) format("truetype");
+}
+
+.roadmap-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding-left: 20px;
+}
+
+.roadmap-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Golos", sans-serif;
+}
+
+.roadmap-block {
+  width: 250px;
+  height: 60px;
+  background-color: rgb(73, 165, 65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  border-radius: 25px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.roadmap-block:hover {
+  background-color: rgb(73, 67, 65);
+  cursor: pointer;
+}
+
+.fake-line {
+  width: 4px;
+  height: 30px; /* Adjust for proper connection */
+  background-color: grey;
+  margin-right: 150px;
+  margin-top: 3px;
+  margin-bottom: 5px;
+  border-radius: 52px;
+}
+
+.modal-sheet {
+  position: fixed;
+  top: 0;
+  right: -100%; /* Start off-screen */
+  width: 70%;
+  height: 100vh;
+  background: white;
+  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
+  transition: right 0.7s ease-in-out;
+}
+
+.modal-sheet.open {
+  right: 0;
+}
