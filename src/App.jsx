@@ -1,4 +1,4 @@
-import Home from "./home/exp-level-selection";
+import Home from "./home/home";
 
 function App() {
   return <Home></Home>;
