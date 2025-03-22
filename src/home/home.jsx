@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import LinearProgress from "@mui/joy/LinearProgress";
 import Box from "@mui/joy/Box";
+import { unstable_batchedUpdates } from 'react-dom'
+import { useRoadmapStore } from "../stores/roadmap";
 
 import "./home.css";
 
@@ -21,6 +23,12 @@ export default function Home() {
       return null;
     }
   }
+    // use Asynchronous Callback to update our Stores because it may cause "zombie-effect" while updating UI
+    const nonReactCallback = (response) => {
+        unstable_batchedUpdates(() => {
+            useRoadmapStore.getState().add(response)
+        })
+    }
 
   const fetchFromGemini = async () => {
     if (!topic.trim()) {
@@ -76,10 +84,20 @@ Example Output:
       console.log("Response from Gemini:");
       console.log(responseText);
       const parsed = parseRoadmap(responseText);
-      console.log("is this a promise? ", parsed);
+
+        unstable_batchedUpdates(() => {
+            Object.keys(parsed).forEach((topic) => {
+                useRoadmapStore.getState().addTopic(topic, parsed[topic], 0);
+            });
+            console.log(useRoadmapStore.getState())
+        })
+
+
+        //TODO: uncomment
       navigate(`/roadmap/${topic}`, {
         state: { roadmap: parsed, topic: topic },
       });
+
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
