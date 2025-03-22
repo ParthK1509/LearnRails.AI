@@ -28,7 +28,7 @@
 .roadmap-block {
   width: 250px;
   height: 60px;
-  background-color: rgb(165, 155, 65);
+  background-color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,10 +36,11 @@
   position: relative;
   border-radius: 25px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  transition: background-color 300ms;
 }
 
 .roadmap-block:hover {
-  background-color: rgb(73, 67, 65);
+  background-color: #F6B285;
   cursor: pointer;
 }
 
