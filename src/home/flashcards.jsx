@@ -6,22 +6,27 @@ const FlashCards = ({ cards }) => {
   const [flipped, setFlipped] = useState(false);
 
   const handleNext = () => {
-    setFlipped(false);
+    setFlipped(true);
     setCurrentIndex((prev) => (prev + 1) % cards.length);
   };
 
   const handlePrev = () => {
-    setFlipped(false);
+    setFlipped(true);
     setCurrentIndex((prev) => (prev - 1 + cards.length) % cards.length);
   };
 
+  console.log("checking cards", cards);
+  console.log(cards[currentIndex].answer);
   return (
     <div className="flashcards-container">
       <div className="flashcard" onClick={() => setFlipped(!flipped)}>
         {flipped ? (
-          <div className="flashcard-back">{cards[currentIndex].answer}</div>
+          <div className="flashcard-back">{cards[currentIndex][0]}</div>
         ) : (
-          <div className="flashcard-front">{cards[currentIndex].question}</div>
+          //make this green text
+          <div className="flashcard-front" style={{ color: "green" }}>
+            {"Answer:\n" + cards[currentIndex][1]}
+          </div>
         )}
       </div>
       <div className="flashcard-controls">

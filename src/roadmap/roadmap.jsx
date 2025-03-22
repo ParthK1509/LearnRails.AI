@@ -99,6 +99,19 @@ export function ModalSheet({ isOpen, onClose, step, subtopics, topic }) {
     }
   }
 
+  function parseFlashcards(data) {
+    try {
+      // Parse if data is a JSON string
+      const flashcards = typeof data === "string" ? JSON.parse(data) : data;
+
+      // Extract and return question-answer pairs
+      return flashcards.map(({ question, answer }) => [question, answer]);
+    } catch (error) {
+      console.error("Invalid JSON format:", error);
+      return [];
+    }
+  }
+
   const getFLashCards = async (topic) => {
     const prompt = `Generate a set of flashcards for the topic "${topic}" in valid JSON format. The output must strictly adhere to the following structure:
 
@@ -135,18 +148,28 @@ Example Output:
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();
+    console.log("Flashcards text:", text);
 
-    const questionData = parseMarkdownToJson(text);
+    const questionData = parseFlashcards(text);
     return questionData;
   };
 
   const getQuestions = async (topic, difficulty) => {
-    const prompt = `Generate four single answer, multiple-choice questions for ${topic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer for each question. Format strictly as follows:
+    const bool = true;
+    const prompt = bool
+      ? `Generate four single answer, multiple-choice questions for ${topic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer for each question. Format strictly as follows:
       Give a json formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0
       for each key, the value is also an object, with the following keys: question, options, correct
       question: {Your question text}
       options: [option1, option2, option3, option4]
-      correct: {correct option text}`;
+      correct: {correct option text}`
+      : `Generate four true/false questions for ${topic} of a difficulty: ${difficulty}. Each question should have only two answer choices: "True" and "False". Specify the correct answer for each question. Format strictly as follows:  
+
+Give a JSON formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0.  
+For each key, the value is an object with the following keys:  
+- question: {Your true/false question text}  
+- options: ["True", "False"]  
+- correct: {Correct option: "True" or "False"} `;
 
     const apiKey = "AIzaSyAQ07vrMnk-ZQRCJyNtIOqklRlHooyJAW4";
 
