@@ -28,6 +28,7 @@ const FlashCards = ({ cards }) => {
           </div>
         )}
       </div>
+      <div style={{ textAlign: "left" }}>Tap on the card to see answer.</div>
       <div className="flashcard-controls">
         <button onClick={handlePrev} disabled={cards.length <= 1}>
           ◀ Prev
