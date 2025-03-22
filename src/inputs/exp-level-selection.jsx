@@ -44,7 +44,6 @@ export default function CuisineSelector() {
                 </div>
                 <div className="cuisine-chips">
                 </div>
-        //TODO: add topic name to this
         <Link to={"/roadmap/3223"}>
         <button className="submit-btn">
         Submit
