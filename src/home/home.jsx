@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { useNavigate } from "react-router";
+import LinearProgress from "@mui/joy/LinearProgress";
+import Box from "@mui/joy/Box";
 
 import "./home.css";
 
 export default function Home() {
   const [topic, setTopic] = useState("");
-    const navigate = useNavigate();
+  const [loding, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   function parseRoadmap(markdown) {
     try {
@@ -24,6 +27,8 @@ export default function Home() {
       console.error("Topic is empty.");
       return;
     }
+
+    setLoading(true);
     const apiKey = "AIzaSyAQ07vrMnk-ZQRCJyNtIOqklRlHooyJAW4";
 
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -34,7 +39,7 @@ export default function Home() {
     subtopics: {subtopics}.
     The output should only be the roadmap, without any additional text. Make sure the output is in json format.
     topic: [subtopics]. Do not include any other text in the output. Start your output with { and end with }.
-    Also just give me plain text, no markdown formatting.
+    Also just give me plain text, no markdown formatting.Make sure that the topic names are not very long. Do not include more than 10 topics.
     `;
 
     console.log("Fetching data from Gemini...");
@@ -49,15 +54,19 @@ export default function Home() {
         return;
       }
 
+      console.log("Response from Gemini:");
       console.log(responseText);
       const parsed = parseRoadmap(responseText);
-      console.log(parsed);
-      navigate("/roadmap", { state: { items: parsed.subtopics } });
+      console.log("is this a promise? ", parsed);
+      navigate(`/roadmap/${topic}`, {
+        state: { roadmap: parsed, topic: topic },
+      });
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
-
   return (
     <div className="root">
       <div className="logo">
@@ -73,7 +82,15 @@ export default function Home() {
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
           />
-          <button onClick={fetchFromGemini}>Search</button>
+          <button onClick={fetchFromGemini}>
+            {loding ? (
+              <Box sx={{ width: "80px", padding: "10px" }}>
+                <LinearProgress color="danger" size="lg" variant="soft" />
+              </Box>
+            ) : (
+              "Search"
+            )}
+          </button>
         </div>
       </div>
     </div>
