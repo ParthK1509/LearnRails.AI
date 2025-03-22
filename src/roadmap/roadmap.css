@@ -80,6 +80,7 @@
 }
 
 .modal-sheet {
+    overflow-y:auto;
   position: fixed;
   top: 0;
   right: 0;
