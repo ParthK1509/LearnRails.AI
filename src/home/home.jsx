@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import LinearProgress from "@mui/joy/LinearProgress";
 import Box from "@mui/joy/Box";
+import { unstable_batchedUpdates } from 'react-dom'
+import { roadmapStore } from "../stores/roadmap";
 
 import "./home.css";
 
@@ -21,6 +23,12 @@ export default function Home() {
       return null;
     }
   }
+    // use Asynchronous Callback to update our Stores because it may cause "zombie-effect" while updating UI
+    const nonReactCallback = (response) => {
+        unstable_batchedUpdates(() => {
+            roadmapStore.getState().add(response)
+        })
+    }
 
   const fetchFromGemini = async () => {
     if (!topic.trim()) {
@@ -35,8 +43,7 @@ export default function Home() {
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `Create a structured learning roadmap for ${topic}, strictly in this format:
-    topics: {topics}
-    subtopics: {subtopics}.
+    topics: {subtopics}.
     The output should only be the roadmap, without any additional text. Make sure the output is in json format.
     topic: [subtopics]. Do not include any other text in the output. Start your output with { and end with }.
     Also just give me plain text, no markdown formatting.Make sure that the topic names are not very long. Do not include more than 10 topics.
@@ -57,10 +64,34 @@ export default function Home() {
       console.log("Response from Gemini:");
       console.log(responseText);
       const parsed = parseRoadmap(responseText);
+
+        unstable_batchedUpdates(() => {
+            Object.keys(parsed).forEach((topic) => {
+                //const { addTopic } = useTopicStore();
+                //addTopic(topic, apiData[topic], index + 1); // Assign a level starting from 1
+                roadmapStore.getState().addTopic(topic, parsed[topic], 0);
+            });
+            console.log(roadmapStore.getState())
+        })
+
+
       console.log("is this a promise? ", parsed);
-      navigate(`/roadmap/${topic}`, {
-        state: { roadmap: parsed, topic: topic },
-      });
+        // here, response is of type : {
+        //
+        //{
+        //"topics": [String]
+        //"subtopics": { String: [String]}
+        //
+        //}
+
+        //TODO: uncomment
+      //navigate(`/roadmap/${topic}`, {
+      //  state: { roadmap: parsed, topic: topic },
+      //});
+
+    // HEre, we will parse the response
+
+
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
