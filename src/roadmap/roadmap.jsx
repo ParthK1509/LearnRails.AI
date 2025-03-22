@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import "./roadmap.css";
 import Quiz from "../components/quiz";
-import { useLocation, useParams } from "react-router-dom";
 import LinearProgress from "@mui/joy/LinearProgress";
 import Box from "@mui/joy/Box";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import FlashCards from "../home/flashcards";
-import { useRoadmapStore } from "../stores/roadmap.js";
+import { useMainTopicStore, useRoadmapStore } from "../stores/roadmap.js";
+import {useUserQuestionTypesStore} from "../stores/userQuestionTypes.js";
 
 export default function Roadmap() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStep, setSelectedStep] = useState(null);
   const [modalValue, setModalValue] = useState([]);
-  const location = useLocation();
 
   const roadmap = useRoadmapStore((state) => state.topics);
-  const topic = "hardcoded topic name"; // TODO: remove this
+  const roadmaptopic = useMainTopicStore((state) => state.maintopic);
+
 
   const openModal = (step, value) => {
     console.log("Opening modal for step:", step);
@@ -31,13 +31,14 @@ export default function Roadmap() {
   return (
     <div>
       <div className="topic-title">
-        {String(topic).charAt(0).toUpperCase() +
-          String(topic).slice(1) +
+        {String(roadmaptopic).charAt(0).toUpperCase() +
+          String(roadmaptopic).slice(1) +
           " Roadmap"}
       </div>
-      <div
-        className={`roadmap-container ${isOpen ? "modal-open" : ""}`} // Toggle class based on modal state
-      >
+      <div className="bot-marg">
+      Click on a Topic Card to Know More.
+      </div>
+      <div className="roadmap-container">
         {Object.entries(roadmap).map(([key, value], index) => {
           return (
             <div
@@ -58,22 +59,48 @@ export default function Roadmap() {
           step={selectedStep}
           subtopics={modalValue}
           topic={selectedStep}
+          maintopic={roadmaptopic}
         />
       </div>
     </div>
   );
 }
 
-export function ModalSheet({ isOpen, onClose, step, subtopics, topic }) {
+export function ModalSheet({
+  isOpen,
+  onClose,
+  step,
+  subtopics,
+  topic,
+  maintopic,
+}) {
   const [activeComponent, setActiveComponent] = useState(null);
   const [loading, setLoading] = useState(false);
   const [quizQuestions, setQuizQuestions] = useState(null);
   const [flashCards, setFlashCards] = useState(null);
+  const roadmap = useRoadmapStore((state) => state.topics);
 
   const onTapQuiz = async () => {
     setLoading(true);
+    console.log("level is: " + roadmap[topic]["level"]);
+    let hardnessLevel = "";
+    switch (roadmap[topic]["level"]) {
+      case 0:
+        hardnessLevel = "easy";
+        break;
+      case 1:
+        hardnessLevel = "medium";
+        break;
+      case 2:
+        hardnessLevel = "hard";
+        break;
+      default:
+        hardnessLevel = "easy";
+        break;
+    }
     try {
-      const questions = await getQuestions(topic, "easy");
+      const questions = await getQuestions(topic, hardnessLevel);
+      console.log("setting difficulty: " + hardnessLevel);
       console.log("Questions:", questions);
       setQuizQuestions(questions);
       setActiveComponent("quiz");
@@ -109,8 +136,21 @@ export function ModalSheet({ isOpen, onClose, step, subtopics, topic }) {
     }
   }
 
+  function parseFlashcards(data) {
+    try {
+      // Parse if data is a JSON string
+      const flashcards = typeof data === "string" ? JSON.parse(data) : data;
+
+      // Extract and return question-answer pairs
+      return flashcards.map(({ question, answer }) => [question, answer]);
+    } catch (error) {
+      console.error("Invalid JSON format:", error);
+      return [];
+    }
+  }
+
   const getFLashCards = async (topic) => {
-    const prompt = `Generate a set of flashcards for the topic "${topic}" in valid JSON format. The output must strictly adhere to the following structure:
+    const prompt = `Generate a set of flashcards for the topic "${topic}" in context of "${maintopic}" in valid JSON format. The output must strictly adhere to the following structure:
 
 [
   { "question": "Question 1", "answer": "Answer 1" },
@@ -145,18 +185,38 @@ Example Output:
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();
+    console.log("Flashcards text:", text);
 
-    const questionData = parseMarkdownToJson(text);
+    const questionData = parseFlashcards(text);
     return questionData;
   };
 
   const getQuestions = async (topic, difficulty) => {
-    const prompt = `Generate four single answer, multiple-choice questions for ${topic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer for each question. Format strictly as follows:
+          let prompt = `Generate four single answer, multiple-choice questions for ${topic} in context of ${maintopic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer for each question. Format strictly as follows:
       Give a json formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0
       for each key, the value is also an object, with the following keys: question, options, correct
       question: {Your question text}
       options: [option1, option2, option3, option4]
       correct: {correct option text}`;
+
+
+      const qTypesPref = useUserQuestionTypesStore.getState().qTypes;
+
+      for (let pref in qTypesPref ){
+          if (pref === "Multiple Choice Questions"){
+              break;
+          }else{
+              prompt = 
+     `Generate four true/false questions for ${topic} in context of ${maintopic} of a difficulty: ${difficulty}. Each question should have only two answer choices: "True" and "False". Specify the correct answer for each question. Format strictly as follows:  
+Give a JSON formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0.  
+For each key, the value is an object with the following keys:  
+- question: {Your true/false question text}  
+- options: ["True", "False"]  
+- correct: {Correct option: "True" or "False"} `;
+              break;
+          }
+      }
+      console.log("prompt = " + prompt);
 
     const apiKey = "AIzaSyAQ07vrMnk-ZQRCJyNtIOqklRlHooyJAW4";
 

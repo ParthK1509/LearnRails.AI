@@ -4,7 +4,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import LinearProgress from "@mui/joy/LinearProgress";
 import Box from "@mui/joy/Box";
 import { unstable_batchedUpdates } from 'react-dom'
-import { useRoadmapStore } from "../stores/roadmap";
+import { useMainTopicStore, useRoadmapStore } from "../stores/roadmap";
 
 import "./home.css";
 
@@ -23,18 +23,16 @@ export default function Home() {
       return null;
     }
   }
-    // use Asynchronous Callback to update our Stores because it may cause "zombie-effect" while updating UI
-    const nonReactCallback = (response) => {
-        unstable_batchedUpdates(() => {
-            useRoadmapStore.getState().add(response)
-        })
-    }
 
   const fetchFromGemini = async () => {
     if (!topic.trim()) {
       console.error("Topic is empty.");
       return;
     }
+      unstable_batchedUpdates(() => {
+          useMainTopicStore.getState().setmaintopic(topic);
+          console.log("Roadmap Topic is: " + useMainTopicStore.getState());
+      })
 
     setLoading(true);
     const apiKey = "AIzaSyAQ07vrMnk-ZQRCJyNtIOqklRlHooyJAW4";
@@ -88,6 +86,7 @@ Example Output:
       console.log(responseText);
       const parsed = parseRoadmap(responseText);
 
+    // use Asynchronous Callback to update our Stores because it may cause "zombie-effect" while updating UI
         unstable_batchedUpdates(() => {
             Object.keys(parsed).forEach((topic) => {
                 useRoadmapStore.getState().addTopic(topic, parsed[topic], 0);
@@ -95,12 +94,6 @@ Example Output:
             console.log(useRoadmapStore.getState())
         })
 
-
-        //TODO: uncomment
-      //navigate(`/roadmap/${topic}`, {
-      //  state: { roadmap: parsed, topic: topic },
-      //});
-        //
         navigate('/input1');
 
     } catch (error) {

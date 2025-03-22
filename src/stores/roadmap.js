@@ -1,8 +1,13 @@
 import { create } from "zustand";
 
+export const useMainTopicStore = create((set) => ({
+    maintopic: "",
+    setmaintopic: (topic) => set(state =>({maintopic: topic})),
+    cleartopic: () => set({ maintopic: "" }),
+}));
+
 export const useRoadmapStore = create((set) => ({
     topics: {},
-
     addTopic: (topic, subtopics, level) => set(state => ({
         topics: {
             ...state.topics,
@@ -34,5 +39,6 @@ export const useRoadmapStore = create((set) => ({
             },
         },
     })),
+    cleartopics: () => set({topics: {}})
 
 }));
