@@ -1,45 +1,38 @@
 import { create } from "zustand";
 
-export const roadmapStore = create((set) => ({
-  roadmap: {},
+export const useRoadmapStore = create((set) => ({
+    topics: {},
 
-  // Add a new topic
-  addTopic: (topic) =>
-    set((state) => ({
-      roadmap: { ...state.roadmap, [topic]: state.roadmap[topic] || [] },
+    addTopic: (topic, subtopics, level) => set(state => ({
+        topics: {
+            ...state.topics,
+            [topic]: { subtopics, level },
+        },
     })),
 
-  // Add subtopics to an existing topic
-  addSubtopic: (topic, subtopic) =>
-    set((state) => ({
-      roadmap: {
-        ...state.roadmap,
-        [topic]: state.roadmap[topic]
-          ? [...state.roadmap[topic], subtopic]
-          : [subtopic],
-      },
+    updateTopicLevel: (topic, level) => set(state => ({
+        topics: {
+            ...state.topics,
+            [topic]: { ...state.topics[topic], level },
+        },
+    })),
+    addSubtopic: (topic, subtopic) => set(state => ({
+        topics: {
+            ...state.topics,
+            [topic]: {
+                ...state.topics[topic],
+                subtopics: [...state.topics[topic].subtopics, subtopic],
+            },
+        },
+    })),
+    removeSubtopic: (topic, subtopic) => set(state => ({
+        topics: {
+            ...state.topics,
+            [topic]: {
+                ...state.topics[topic],
+                subtopics: state.topics[topic].subtopics.filter(s => s !== subtopic),
+            },
+        },
     })),
 
-  // Remove a topic
-  removeTopic: (topic) =>
-    set((state) => {
-      const newRoadmap = { ...state.roadmap };
-      delete newRoadmap[topic];
-      return { roadmap: newRoadmap };
-    }),
-
-  // Remove a subtopic
-  removeSubtopic: (topic, subtopic) =>
-    set((state) => ({
-      roadmap: {
-        ...state.roadmap,
-        [topic]: state.roadmap[topic]?.filter((s) => s !== subtopic) || [],
-      },
-    })),
-
-  // Get all topics
-  getTopics: () => (get) => Object.keys(get().roadmap),
-
-  // Get subtopics for a topic
-  getSubtopics: (topic) => (get) => get().roadmap[topic] || [],
 }));

@@ -6,18 +6,24 @@ import LinearProgress from "@mui/joy/LinearProgress";
 import Box from "@mui/joy/Box";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import FlashCards from "../home/flashcards";
+import {useRoadmapStore} from "../stores/roadmap.js";
 
 export default function Roadmap() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStep, setSelectedStep] = useState(null);
   const [modalValue, setModalValue] = useState([]);
   const location = useLocation();
-  const { roadmap, topic } = location.state;
+
+    const roadmap = useRoadmapStore((state) => state.topics);
+  //const { roadmap, topic } = location.state;
+    //
+    //TODO: remove this
+    const topic = "hardcoded topic name";
 
   const openModal = (step, value) => {
     console.log("Opening modal for step:", step);
     setSelectedStep(step);
-    setModalValue(value);
+    setModalValue(value["subtopics"]);
     console.log("Modal value: ", modalValue);
     setIsOpen(true);
   };
@@ -30,17 +36,20 @@ export default function Roadmap() {
           " Roadmap"}
       </div>
       <div className="roadmap-container">
-        {Object.entries(roadmap).map(([key, value], index) => (
-          <div
-            key={index}
-            className="roadmap-item"
-            onClick={() => openModal(key, value)}
-          >
-            {index !== 0 && <div className="fake-line"></div>}
-            {index !== 0 && <div className="fake-line"></div>}
-            <div className="roadmap-block">{key}</div>
-          </div>
-        ))}
+        {Object.entries(roadmap).map(([key, value], index) => {
+            return (
+                <div
+                key={index}
+                className="roadmap-item"
+                onClick={() => openModal(key, value)}
+                >
+                {index !== 0 && <div className="fake-line"></div>}
+                {index !== 0 && <div className="fake-line"></div>}
+                <div className="roadmap-block">{key}</div>
+                </div>
+            );
+        }
+        )}
         <ModalSheet
           key={selectedStep}
           isOpen={isOpen}
