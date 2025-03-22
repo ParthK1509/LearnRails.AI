@@ -203,9 +203,7 @@ Example Output:
       const qTypesPref = useUserQuestionTypesStore.getState().qTypes;
 
       for (let pref in qTypesPref ){
-          if (pref === "Multiple Choice Questions"){
-              break;
-          }else{
+          if (pref === "True/False Quizzes"){
               prompt = 
      `Generate four true/false questions for ${topic} in context of ${maintopic} of a difficulty: ${difficulty}. Each question should have only two answer choices: "True" and "False". Specify the correct answer for each question. Format strictly as follows:  
 Give a JSON formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0.  
