@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { useNavigate } from "react-router";
 
 import "./home.css";
 
 export default function Home() {
   const [topic, setTopic] = useState("");
+    const navigate = useNavigate();
 
   function parseRoadmap(markdown) {
     try {

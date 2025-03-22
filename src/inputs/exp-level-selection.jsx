@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Check } from 'lucide-react';
 import './exp-level-selector.css';
+import '../stores/userQuestionTypes';
 
 const questionTypes = [
   "Short Answer Quizzes", "Multiple Choice Questions", "True/False Quizzes", "Long Answer Quizzes"

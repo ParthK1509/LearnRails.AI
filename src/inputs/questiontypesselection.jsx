@@ -1,25 +1,22 @@
 import { useState } from "react";
 import { Check } from 'lucide-react';
 import './question-types-selector.css';
-//import { useUserQuestionTypesStore } from  '../stores/userQuestionTypes.js';
+import { useUserQuestionTypesStore } from '../stores/userQuestionTypes';
 
 const questionTypes = [
     "Short Answer Quizzes", "Multiple Choice Questions", "True/False Quizzes", "Long Answer Quizzes"
 ];
 
 export default function questionTypesSelector() {
-    const [selectedTypes, setSelected] = useState([]);
-    //const [selectedTypes, addQ, removeQ] = useUserQuestionTypesStore();
+    const { qTypes, add_qType, remove_qType } = useUserQuestionTypesStore();
 
     const toggleQuestion = (questionType) => {
-        //if (selected.includes(questionType)){
-        //    removeQ(questionType);
-        //}else{
-        //    addQ(questionType);
-        //}
-        setSelected((prev) =>
-            prev.includes(questionType) ? prev.filter((c) => c !== questionType) : [...prev, questionType]
-        );
+        if (qTypes.includes(questionType)){
+            remove_qType(questionType);
+        }else{
+            add_qType(questionType);
+        }
+        console.log(qTypes);
     };
 
     const submitBtnPress = () => {
@@ -34,7 +31,7 @@ export default function questionTypesSelector() {
             <div className="cuisine-grid">
                 <div className="cuisine-chips">
                     {questionTypes.map((_qtype) => {
-                        const isSelected = selectedTypes.includes(_qtype);
+                        const isSelected = qTypes.includes(_qtype);
                         return (
                             <button
                                 key={_qtype}
