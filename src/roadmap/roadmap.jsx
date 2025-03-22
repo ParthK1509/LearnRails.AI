@@ -6,7 +6,12 @@ import LinearProgress from "@mui/joy/LinearProgress";
 import Box from "@mui/joy/Box";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import FlashCards from "../home/flashcards";
+<<<<<<< Updated upstream
 import { useMainTopicStore, useRoadmapStore } from "../stores/roadmap.js";
+=======
+import {useMainTopicStore, useRoadmapStore} from "../stores/roadmap.js";
+import {useUserQuestionTypesStore} from "../stores/userQuestionTypes.js";
+>>>>>>> Stashed changes
 
 export default function Roadmap() {
   const [isOpen, setIsOpen] = useState(false);
@@ -186,21 +191,48 @@ Example Output:
   };
 
   const getQuestions = async (topic, difficulty) => {
+<<<<<<< Updated upstream
     const bool = true;
     const prompt = bool
       ? `Generate four single answer, multiple-choice questions for ${topic} in context of ${maintopic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer for each question. Format strictly as follows:
+=======
+
+      let prompt = `Generate four single answer, multiple-choice questions for ${topic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer for each question. Format strictly as follows:
+>>>>>>> Stashed changes
       Give a json formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0
       for each key, the value is also an object, with the following keys: question, options, correct
       question: {Your question text}
       options: [option1, option2, option3, option4]
+<<<<<<< Updated upstream
       correct: {correct option text}`
       : `Generate four true/false questions for ${topic} in context of ${maintopic} of a difficulty: ${difficulty}. Each question should have only two answer choices: "True" and "False". Specify the correct answer for each question. Format strictly as follows:  
+=======
+      correct: {correct option text}`;
+
+      const qTypesPref = useUserQuestionTypesStore.getState().qTypes;
+
+      for (let pref in qTypesPref ){
+          if (pref === "Multiple Choice Questions"){
+              prompt = `Generate four single answer, multiple-choice questions for ${topic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer for each question. Format strictly as follows:
+      Give a json formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0
+      for each key, the value is also an object, with the following keys: question, options, correct
+      question: {Your question text}
+      options: [option1, option2, option3, option4]
+      correct: {correct option text}`;
+              break;
+          }else{
+              prompt = `Generate four true/false questions for ${topic} of a difficulty: ${difficulty}. Each question should have only two answer choices: "True" and "False". Specify the correct answer for each question. Format strictly as follows:  
+>>>>>>> Stashed changes
 
 Give a JSON formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0.  
 For each key, the value is an object with the following keys:  
 - question: {Your true/false question text}  
 - options: ["True", "False"]  
 - correct: {Correct option: "True" or "False"} `;
+              break;
+          }
+      }
+      console.log("prompt = " + prompt);
 
     const apiKey = "AIzaSyAQ07vrMnk-ZQRCJyNtIOqklRlHooyJAW4";
 
