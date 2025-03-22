@@ -47,7 +47,7 @@ Key features
 4) A personalised roadmap for learning the topic will appear, click on the subtopics to learn more.
 ![image](https://github.com/user-attachments/assets/8ee9ac3b-daa4-454d-a1c7-67590e40e4d0)
 
-5) We will show the recommended topics to learn, click on any of the topics to learn about them, or you can take a quiz, or brush you concepts using flash cards.
+5) We will show the recommended topics to learn,** click on any of the topics ** to learn about them, or you can take a quiz, or brush you concepts using flash cards.
 ![image](https://github.com/user-attachments/assets/145b5559-8741-41ec-8ee2-40d41c29d87f)
 
 6) We will ask you quiz or show you flash cards as per your selection.
