@@ -25,7 +25,7 @@ const Quiz = ({ isOpen, topic = "" }) => {
         console.error("Invalid markdown format or JSON parsing error:", error);
         return null;
     }
-}
+  }
 
   useEffect(() => {
     const fetchMCQ = async () => {
@@ -35,8 +35,8 @@ const Quiz = ({ isOpen, topic = "" }) => {
       setFeedback("");
       setSelectedOption(null);
 
-      const prompt = `Generate a single answer, multiple-choice question for ${topic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer. Format strictly as follows:
-      Give a json formatted output. Your output should start with { and end with }, insdie the object have an incremental key starting from the number 0
+      const prompt = `Generate four single answer, multiple-choice questions for ${topic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer for each question. Format strictly as follows:
+      Give a json formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0
       for each key, the value is also an object, with the following keys: question, options, correct
       question: {Your question text}
       options: [option1, option2, option3, option4]
@@ -61,21 +61,16 @@ const Quiz = ({ isOpen, topic = "" }) => {
 
         console.log("Response from Gemini:", text);
 
-const questionData = parseMarkdownToJson(text);
+        const questionData = parseMarkdownToJson(text);
 
-for(const key in questionData){
-  setQuestions(...[{question: questionData[key].question, options: questionData[key].options, answer: questionData[key].correct}]);
-}
+        const newQuestions = Object.keys(questionData).map(key => ({
+          question: questionData[key].question,
+          options: questionData[key].options,
+          answer: questionData[key].correct,
+        }));
 
-        // if (questionMatch && optionsMatch && correctMatch) {
-        //   setQuestions([{
-        //     question: questionMatch[1],
-        //     options: optionsMatch[1].split(",").map((opt) => opt.trim().replace(/[{}]/g, '')),
-        //     answer: correctMatch[1].replace(/[{}]/g, ''),
-        //   }]);
-        // } else {
-        //   setQuestions([]);
-        // }
+        setQuestions(newQuestions);
+
       } catch (error) {
         console.error("Error fetching MCQ:", error);
         setQuestions([]);
@@ -86,11 +81,9 @@ for(const key in questionData){
     fetchMCQ();
   }, [topic]);
 
-
-
   const handleAnswer = (option) => {
     setSelectedOption(option);
-    if (option === questions[currentQuestion].answer) {
+    if (option === questions[currentQuestion]?.answer) {
       setFeedback("✅ Correct!");
       setScore(score + 1);
     } else {
@@ -116,16 +109,25 @@ for(const key in questionData){
     return <div>No questions available.</div>;
   }
 
+  if (currentQuestion === questions.length) {
+    return (
+      <div className="quiz-container">
+        <h2>Quiz Completed!</h2>
+        <p>Your total score is: {score} out of {questions.length}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="quiz-container">
-      <h2>{questions[currentQuestion].question}</h2>
+      <h2>{questions[currentQuestion]?.question}</h2>
       <div className="options">
-        {questions[currentQuestion].options.map((option, index) => (
+        {questions[currentQuestion]?.options.map((option, index) => (
           <button
             key={index}
             className={`option-btn ${
               selectedOption
-                ? option === questions[currentQuestion].answer
+                ? option === questions[currentQuestion]?.answer
                   ? "correct"
                   : option === selectedOption
                   ? "incorrect"
@@ -152,6 +154,9 @@ for(const key in questionData){
       </div>
       <p>
         Question {currentQuestion + 1} of {questions.length}
+      </p>
+      <p>
+        Current Score: {score}
       </p>
     </div>
   );
