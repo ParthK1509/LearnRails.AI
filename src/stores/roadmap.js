@@ -2,7 +2,6 @@ import { create } from "zustand";
 
 export const useRoadmapStore = create((set) => ({
     topics: {},
-
     addTopic: (topic, subtopics, level) => set(state => ({
         topics: {
             ...state.topics,

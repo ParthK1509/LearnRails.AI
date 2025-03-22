@@ -68,11 +68,29 @@ export function ModalSheet({ isOpen, onClose, step, subtopics, topic }) {
   const [loading, setLoading] = useState(false);
   const [quizQuestions, setQuizQuestions] = useState(null);
   const [flashCards, setFlashCards] = useState(null);
+    const roadmap = useRoadmapStore((state) => state.topics);
 
   const onTapQuiz = async () => {
     setLoading(true);
+      console.log("level is: " + roadmap[topic]["level"]);
+      let hardnessLevel = "";
+      switch(roadmap[topic]["level"]){
+          case 0:
+              hardnessLevel = "easy";
+              break;
+            case 1:
+              hardnessLevel = "medium";
+              break;
+          case 2:
+              hardnessLevel = "hard";
+              break;
+          default:
+              hardnessLevel = "easy";
+              break;
+      }
     try {
-      const questions = await getQuestions(topic, "easy");
+      const questions = await getQuestions(topic, hardnessLevel);
+        console.log("setting difficulty: " + hardnessLevel);
       console.log("Questions:", questions);
       setQuizQuestions(questions);
       setActiveComponent("quiz");
