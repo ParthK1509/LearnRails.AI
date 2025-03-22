@@ -1,17 +1,16 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./home/home";
-import { Roadmap } from "./roadmap/roadmap";
+import RoadmapPage from "./roadmap/roadmap";
 
 function App() {
-  const roadmapItems = [
-    "Project Kickoff",
-    "Research Phase",
-    "Design Prototype",
-    "Development",
-    "Testing",
-    "Deployment",
-    "Maintenance",
-  ];
-  return <Home></Home>;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/roadmap" element={<RoadmapPage />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
