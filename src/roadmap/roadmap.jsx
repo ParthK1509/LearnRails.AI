@@ -16,12 +16,16 @@ export default function Roadmap() {
   const roadmap = useRoadmapStore((state) => state.topics);
   const roadmaptopic = useMainTopicStore((state) => state.maintopic);
 
+
   const openModal = (step, value) => {
     console.log("Opening modal for step:", step);
     setSelectedStep(step);
     setModalValue(value["subtopics"]);
-    console.log("Modal value: ", modalValue);
     setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -51,7 +55,7 @@ export default function Roadmap() {
         <ModalSheet
           key={selectedStep}
           isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
+          onClose={closeModal}
           step={selectedStep}
           subtopics={modalValue}
           topic={selectedStep}
@@ -245,10 +249,16 @@ For each key, the value is an object with the following keys:
               We Recommend Learning these Subtopics:
             </div>
             <div className="modal-content">
-              {subtopics.map((subtopic, index) => (
-                <div key={index} className="subtopic">
-                  {subtopic}
-                </div>
+              {subtopics.map((subtopicObj, index) => (
+                <a
+                  key={index}
+                  href={subtopicObj.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="subtopic"
+                >
+                  {subtopicObj.subtopic}
+                </a>
               ))}
             </div>
           </div>

@@ -43,8 +43,8 @@ export default function Home() {
     const prompt = `Generate a structured learning roadmap for "${topic}" in valid JSON format. The output must strictly adhere to the following structure:
 
 {
-  "topic1": ["subtopic1", "subtopic2", "subtopic3"],
-  "topic2": ["subtopic1", "subtopic2", "subtopic3"],
+  "topic1": [{"subtopic": "subtopic1", "link": "url1"}, {"subtopic": "subtopic2", "link": "url2"}],
+  "topic2": [{"subtopic": "subtopic1", "link": "url1"}, {"subtopic": "subtopic2", "link": "url2"}],
   ...
 }
 
@@ -55,15 +55,18 @@ Rules:
 - Ensure topic names are concise (not too long).
 - Include at most 10 topics.
 - Each topic must have relevant subtopics (at least one per topic).
+- Each subtopic must include a "link" field with a URL to learn about it.
+- Prioritize links in the following order:
+  1. Wikipedia
+  2. Web Archive
+  3. Official documentation or trusted educational websites (e.g., Khan Academy, Coursera, Quizizz).
+- Do not include YouTube links as they are not working.
 - Do not add any explanations, disclaimers, or other text.
 
 Example Output:
 
 {
-  "Introduction": ["Overview", "History", "Basic Concepts"],
-  "Fundamentals": ["Core Principles", "Key Theories", "Common Applications"],
-  "Advanced Topics": ["Deep Learning", "Optimization Techniques", "Performance Tuning"],
-  "Best Practices": ["Industry Standards", "Efficiency Tips", "Case Studies"]
+  "Introduction": [{"subtopic": "Overview", "link": "https://en.wikipedia.org/wiki/Overview"}, {"subtopic": "History", "link": "https://web.archive.org/web/20210101010101/https://example.com/history"}],
 }
 `;
 
@@ -99,6 +102,13 @@ Example Output:
       setLoading(false);
     }
   };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      fetchFromGemini(); // Trigger search when "Enter" is pressed
+    }
+  };
+
   return (
     <div className="root">
       <div className="logo">
@@ -113,6 +123,7 @@ Example Output:
             placeholder="e.g. Rigid Body Dynamics"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
+            onKeyDown={handleKeyDown} // Add keydown event listener
           />
           <button onClick={fetchFromGemini}>
             {loding ? (
