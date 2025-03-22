@@ -1,59 +1,56 @@
-import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 import "./home.css";
 
 export default function Home() {
   const [topic, setTopic] = useState("");
-  const navigate = useNavigate();
 
-  const parseRoadmap = (text) => {
-    const prerequisiteMatch = text.match(/prerequisite:\s*{([^}]*)}/i);
-    const subtopicsMatch = text.match(/subtopics:\s*{([^}]*)}/i);
+  function parseRoadmap(markdown) {
+    try {
+      const jsonString = markdown.replace(/```json|```/g, "").trim();
 
-    const prerequisites = prerequisiteMatch
-      ? prerequisiteMatch[1].split(",").map((item) => item.trim())
-      : [];
-    const subtopics = subtopicsMatch
-      ? subtopicsMatch[1].split(",").map((item) => item.trim())
-      : [];
+      return JSON.parse(jsonString);
+    } catch (error) {
+      console.error("Invalid JSON:", error);
+      return null;
+    }
+  }
 
-    console.log(prerequisites, subtopics);
-    return { prerequisites, subtopics };
-  };
+  const fetchFromGemini = async () => {
+    if (!topic.trim()) {
+      console.error("Topic is empty.");
+      return;
+    }
 
-  const fetchData = async () => {
-    if (!topic.trim()) return;
+    const apiKey = "AIzaSyAQ07vrMnk-ZQRCJyNtIOqklRlHooyJAW4";
 
-    let prompt = `Create a structured learning roadmap for ${topic}, strictly in this format:
-      1) prerequisite: {topic names}
-      2) subtopics: {topic names}
-      (keep {} brackets intact and comma-separated topic names)`;
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    const prompt = `Create a structured learning roadmap for ${topic}, strictly in this format:
+    topics: {topics}
+    subtopics: {subtopics}.
+    The output should only be the roadmap, without any additional text. Make sure the output is in json format.
+    topic: [subtopics]. Do not include any other text in the output. Start your output with { and end with }.
+    Also just give me plain text, no markdown formatting.
+    `;
+
+    console.log("Fetching data from Gemini...");
+    console.log("Prompt:", prompt);
 
     try {
-      const response = await fetch(
-        "https://openrouter.ai/api/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            Authorization:
-              "Bearer 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",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "deepseek/deepseek-r1-zero:free",
-            messages: [{ role: "user", content: prompt }],
-          }),
-        }
-      );
+      const result = await model.generateContent(prompt);
+      const responseText = result.response.text();
 
-      const data = await response.json();
-      const responseText =
-        data.choices[0]?.message?.content || "No data found.";
+      if (!responseText) {
+        console.error("Failed to fetch valid response from Gemini.");
+        return;
+      }
 
-      console.log("Response from API:", responseText);
       console.log(responseText);
       const parsed = parseRoadmap(responseText);
-      navigate("/roadmap", { state: { items: parsed.subtopics } });
+      console.log(parsed);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -74,7 +71,7 @@ export default function Home() {
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
           />
-          <button onClick={fetchData}>Search</button>
+          <button onClick={fetchFromGemini}>Search</button>
         </div>
       </div>
     </div>
