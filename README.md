@@ -35,6 +35,27 @@ Key features
 ✅ **User-Centric Experience** – Learners feel supported with AI-driven guidance.
 
 ## Screenshots
+1) Enter the topic you want to learn today.
+![image](https://github.com/user-attachments/assets/fa755904-9c3d-4bff-b002-08812e09046e)
+
+2) Select the type of questions you would like to answer.
+![image](https://github.com/user-attachments/assets/053ad99e-11c2-472f-aa26-9dd659fcc548)
+
+3) Select how experienced are you with the subtopics.
+![image](https://github.com/user-attachments/assets/d4923dd8-c7c1-4950-920e-196b7d7c6706)
+
+4) A personalised roadmap for learning the topic will appear, click on the subtopics to learn more.
+![image](https://github.com/user-attachments/assets/8ee9ac3b-daa4-454d-a1c7-67590e40e4d0)
+
+5) We will show the recommended topics to learn, click on any of the topics to learn about them, or you can take a quiz, or brush you concepts using flash cards.
+![image](https://github.com/user-attachments/assets/145b5559-8741-41ec-8ee2-40d41c29d87f)
+
+6) We will ask you quiz or show you flash cards as per your selection.
+![image](https://github.com/user-attachments/assets/9db47864-6c30-467f-bd58-e49c9bedbc67) ![image](https://github.com/user-attachments/assets/904212b4-2b74-4531-9be2-be4480a8712c)
+
+
+
+
 
    
 # React + Vite
