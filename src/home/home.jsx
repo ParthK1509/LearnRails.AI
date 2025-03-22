@@ -53,15 +53,14 @@ Rules:
 - Prioritize links in the following order:
   1. Wikipedia
   2. Web Archive
-  3. YouTube
-  4. Official documentation or trusted educational websites (e.g., Khan Academy, Coursera).
+  3. Official documentation or trusted educational websites (e.g., Khan Academy, Coursera, Quizizz).
+- Do not include YouTube links as they are not working.
 - Do not add any explanations, disclaimers, or other text.
 
 Example Output:
 
 {
   "Introduction": [{"subtopic": "Overview", "link": "https://en.wikipedia.org/wiki/Overview"}, {"subtopic": "History", "link": "https://web.archive.org/web/20210101010101/https://example.com/history"}],
-  "Fundamentals": [{"subtopic": "Core Principles", "link": "https://www.youtube.com/watch?v=example"}]
 }
 `;
 
