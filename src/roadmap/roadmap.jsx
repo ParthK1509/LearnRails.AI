@@ -71,10 +71,16 @@ export function ModalSheet({ isOpen, onClose, step, subtopics }) {
               We Recommend Learning these Subtopics:
             </div>
             <div className="modal-content">
-              {subtopics.map((subtopic, index) => (
-                <div key={index} className="subtopic">
-                  {subtopic}
-                </div>
+              {subtopics.map((subtopicObj, index) => (
+                <a
+                  key={index}
+                  href={subtopicObj.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="subtopic"
+                >
+                  {subtopicObj.subtopic}
+                </a>
               ))}
             </div>
           </div>

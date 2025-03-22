@@ -108,6 +108,14 @@
   border-radius: 8px;
   text-align: center;
   font-size: 16px;
+  text-decoration: none;
+  color: black;
+  transition: background-color 0.3s ease;
+}
+
+.subtopic:hover {
+  background-color: #e0e0e0;
+  cursor: pointer;
 }
 
 .modal-sheet.open {
