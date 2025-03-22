@@ -86,6 +86,13 @@ Example Output:
       setLoading(false);
     }
   };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      fetchFromGemini(); // Trigger search when "Enter" is pressed
+    }
+  };
+
   return (
     <div className="root">
       <div className="logo">
@@ -100,6 +107,7 @@ Example Output:
             placeholder="e.g. Rigid Body Dynamics"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
+            onKeyDown={handleKeyDown} // Add keydown event listener
           />
           <button onClick={fetchFromGemini}>
             {loding ? (
