@@ -1,17 +1,19 @@
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { createBrowserRouter,RouterProvider } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
 import Roadmap from "./roadmap/roadmap";
-import { BrowserRouter, Route, Routes } from "react-router";
-import { StrictMode } from "react";
+import Questiontypesselection from "./inputs/questiontypesselection.jsx";
+
+const router = createBrowserRouter([
+    {path: "/", element: <App/>},
+    {path: "/roadmap", element: <Roadmap/>},
+    {path: "/input1", element: <Questiontypesselection/>},
+]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/roadmap" element={<Roadmap />} />
-      </Routes>
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </StrictMode>
 );

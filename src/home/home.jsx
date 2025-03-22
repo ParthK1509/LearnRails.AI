@@ -22,7 +22,6 @@ export default function Home() {
       console.error("Topic is empty.");
       return;
     }
-
     const apiKey = "AIzaSyAQ07vrMnk-ZQRCJyNtIOqklRlHooyJAW4";
 
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -51,6 +50,7 @@ export default function Home() {
       console.log(responseText);
       const parsed = parseRoadmap(responseText);
       console.log(parsed);
+      navigate("/roadmap", { state: { items: parsed.subtopics } });
     } catch (error) {
       console.error("Error fetching data:", error);
     }
