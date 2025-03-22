@@ -26,7 +26,7 @@ export default function Roadmap() {
           " Roadmap"}
       </div>
       <div className="roadmap-container">
-        {Object.entries(roadmap.topics).map(([key, value], index) => (
+        {Object.entries(roadmap).map(([key, value], index) => (
           <div
             key={index}
             className="roadmap-item"
@@ -49,6 +49,8 @@ export default function Roadmap() {
 }
 
 export function ModalSheet({ isOpen, onClose, step, subtopics }) {
+  const [activeComponent, setActiveComponent] = useState(null);
+
   return (
     <div>
       {/* Backdrop */}
@@ -77,30 +79,22 @@ export function ModalSheet({ isOpen, onClose, step, subtopics }) {
             </div>
           </div>
           <div className="modal-buttons">
-            <button>Take Quiz</button>
-            <button>See Flash Cards</button>
+            <button onClick={() => setActiveComponent("quiz")}>
+              Take Quiz
+            </button>
+            <button onClick={() => setActiveComponent("flashcards")}>
+              See Flash Cards
+            </button>
           </div>
+        </div>
+        {/* Dynamic Component Section */}
+        <div className="dynamic-content" style={{ minHeight: "100px" }}>
+          {activeComponent === "quiz" && (
+            <Quiz key={`quiz-${isOpen}-${step}`} />
+          )}
+          {/* {activeComponent === "flashcards" && <FlashCardComponent />} */}
         </div>
       </div>
     </div>
-
-    // <div className={`modal-sheet ${isOpen ? "open" : ""}`}>
-    //   <button onClick={onClose}>Close</button>
-    //   {
-    //     <div>
-    //       <div className="modal-title">
-    //         {step + "\nWe Recommend Learning these subtopics :"}
-    //       </div>
-    //       <div className="modal-content">
-    //         {subtopics.map((subtopic, index) => (
-    //           <div key={index} className="subtopic">
-    //             {subtopic}
-    //           </div>
-    //         ))}
-    //       </div>
-    //     </div>
-    //   }
-    //   {/* <Quiz key={`quiz-${isOpen}-${step}`} /> */}
-    // </div>
   );
 }
