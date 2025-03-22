@@ -3,7 +3,7 @@ import "./flashcards.css"; // Ensure to create and style this file
 
 const FlashCards = ({ cards }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [flipped, setFlipped] = useState(false);
+  const [flipped, setFlipped] = useState(true);
 
   const handleNext = () => {
     setFlipped(true);
@@ -23,7 +23,6 @@ const FlashCards = ({ cards }) => {
         {flipped ? (
           <div className="flashcard-back">{cards[currentIndex][0]}</div>
         ) : (
-          //make this green text
           <div className="flashcard-front" style={{ color: "green" }}>
             {"Answer:\n" + cards[currentIndex][1]}
           </div>

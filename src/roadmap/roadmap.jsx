@@ -6,7 +6,7 @@ import LinearProgress from "@mui/joy/LinearProgress";
 import Box from "@mui/joy/Box";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import FlashCards from "../home/flashcards";
-import {useMainTopicStore, useRoadmapStore} from "../stores/roadmap.js";
+import { useMainTopicStore, useRoadmapStore } from "../stores/roadmap.js";
 
 export default function Roadmap() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,8 +14,8 @@ export default function Roadmap() {
   const [modalValue, setModalValue] = useState([]);
   const location = useLocation();
 
-    const roadmap = useRoadmapStore((state) => state.topics);
-    const roadmaptopic = useMainTopicStore((state) => state.maintopic);
+  const roadmap = useRoadmapStore((state) => state.topics);
+  const roadmaptopic = useMainTopicStore((state) => state.maintopic);
 
   const openModal = (step, value) => {
     console.log("Opening modal for step:", step);
@@ -34,19 +34,18 @@ export default function Roadmap() {
       </div>
       <div className="roadmap-container">
         {Object.entries(roadmap).map(([key, value], index) => {
-            return (
-                <div
-                key={index}
-                className="roadmap-item"
-                onClick={() => openModal(key, value)}
-                >
-                {index !== 0 && <div className="fake-line"></div>}
-                {index !== 0 && <div className="fake-line"></div>}
-                <div className="roadmap-block">{key}</div>
-                </div>
-            );
-        }
-        )}
+          return (
+            <div
+              key={index}
+              className="roadmap-item"
+              onClick={() => openModal(key, value)}
+            >
+              {index !== 0 && <div className="fake-line"></div>}
+              {index !== 0 && <div className="fake-line"></div>}
+              <div className="roadmap-block">{key}</div>
+            </div>
+          );
+        })}
         <ModalSheet
           key={selectedStep}
           isOpen={isOpen}
@@ -54,40 +53,48 @@ export default function Roadmap() {
           step={selectedStep}
           subtopics={modalValue}
           topic={selectedStep}
+          maintopic={roadmaptopic}
         />
       </div>
     </div>
   );
 }
 
-export function ModalSheet({ isOpen, onClose, step, subtopics, topic }) {
+export function ModalSheet({
+  isOpen,
+  onClose,
+  step,
+  subtopics,
+  topic,
+  maintopic,
+}) {
   const [activeComponent, setActiveComponent] = useState(null);
   const [loading, setLoading] = useState(false);
   const [quizQuestions, setQuizQuestions] = useState(null);
   const [flashCards, setFlashCards] = useState(null);
-    const roadmap = useRoadmapStore((state) => state.topics);
+  const roadmap = useRoadmapStore((state) => state.topics);
 
   const onTapQuiz = async () => {
     setLoading(true);
-      console.log("level is: " + roadmap[topic]["level"]);
-      let hardnessLevel = "";
-      switch(roadmap[topic]["level"]){
-          case 0:
-              hardnessLevel = "easy";
-              break;
-            case 1:
-              hardnessLevel = "medium";
-              break;
-          case 2:
-              hardnessLevel = "hard";
-              break;
-          default:
-              hardnessLevel = "easy";
-              break;
-      }
+    console.log("level is: " + roadmap[topic]["level"]);
+    let hardnessLevel = "";
+    switch (roadmap[topic]["level"]) {
+      case 0:
+        hardnessLevel = "easy";
+        break;
+      case 1:
+        hardnessLevel = "medium";
+        break;
+      case 2:
+        hardnessLevel = "hard";
+        break;
+      default:
+        hardnessLevel = "easy";
+        break;
+    }
     try {
       const questions = await getQuestions(topic, hardnessLevel);
-        console.log("setting difficulty: " + hardnessLevel);
+      console.log("setting difficulty: " + hardnessLevel);
       console.log("Questions:", questions);
       setQuizQuestions(questions);
       setActiveComponent("quiz");
@@ -137,7 +144,7 @@ export function ModalSheet({ isOpen, onClose, step, subtopics, topic }) {
   }
 
   const getFLashCards = async (topic) => {
-    const prompt = `Generate a set of flashcards for the topic "${topic}" in valid JSON format. The output must strictly adhere to the following structure:
+    const prompt = `Generate a set of flashcards for the topic "${topic}" in context of "${maintopic}" in valid JSON format. The output must strictly adhere to the following structure:
 
 [
   { "question": "Question 1", "answer": "Answer 1" },
@@ -181,13 +188,13 @@ Example Output:
   const getQuestions = async (topic, difficulty) => {
     const bool = true;
     const prompt = bool
-      ? `Generate four single answer, multiple-choice questions for ${topic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer for each question. Format strictly as follows:
+      ? `Generate four single answer, multiple-choice questions for ${topic} in context of ${maintopic} of a difficulty: ${difficulty}. Provide four answer choices and specify the correct answer for each question. Format strictly as follows:
       Give a json formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0
       for each key, the value is also an object, with the following keys: question, options, correct
       question: {Your question text}
       options: [option1, option2, option3, option4]
       correct: {correct option text}`
-      : `Generate four true/false questions for ${topic} of a difficulty: ${difficulty}. Each question should have only two answer choices: "True" and "False". Specify the correct answer for each question. Format strictly as follows:  
+      : `Generate four true/false questions for ${topic} in context of ${maintopic} of a difficulty: ${difficulty}. Each question should have only two answer choices: "True" and "False". Specify the correct answer for each question. Format strictly as follows:  
 
 Give a JSON formatted output. Your output should start with { and end with }, inside the object have an incremental key starting from the number 0.  
 For each key, the value is an object with the following keys:  
