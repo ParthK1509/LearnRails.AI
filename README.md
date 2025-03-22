@@ -34,6 +34,8 @@ Key features
 ✅ **Hyperlinked Learning Resources** – One-click access to relevant study materials.  
 ✅ **User-Centric Experience** – Learners feel supported with AI-driven guidance.
 
+## Screenshots
+
    
 # React + Vite
 
