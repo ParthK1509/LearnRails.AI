@@ -5,6 +5,7 @@ import LinearProgress from "@mui/joy/LinearProgress";
 import Box from "@mui/joy/Box";
 import { unstable_batchedUpdates } from 'react-dom'
 import { useMainTopicStore, useRoadmapStore } from "../stores/roadmap";
+import  {useUserQuestionTypesStore} from "../stores/userQuestionTypes";
 
 import "./home.css";
 
@@ -25,6 +26,12 @@ export default function Home() {
   }
 
   const fetchFromGemini = async () => {
+      // clear zustand stores
+      useRoadmapStore.getState().cleartopics();
+      useUserQuestionTypesStore.getState().clearState();
+
+          useMainTopicStore.getState().setmaintopic(topic);
+
     if (!topic.trim()) {
       console.error("Topic is empty.");
       return;

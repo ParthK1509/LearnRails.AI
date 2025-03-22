@@ -7,5 +7,6 @@ export const useUserQuestionTypesStore = create((set) => ({
       set(state => ({
           qTypes: state.qTypes.filter(item => qT !== item),
       }));
-  }
+  },
+    clearState: () => set((state) => ({qTypes: []}))
 }))
