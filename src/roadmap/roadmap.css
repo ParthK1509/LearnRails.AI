@@ -9,12 +9,21 @@
   margin-bottom: 22px;
   align-self: center;
   text-align: center;
+  margin-top: 20px; /* Add margin to prevent overlap */
 }
 .roadmap-container {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: center; /* Center the roadmap by default */
   padding-left: 20px;
+  margin-top: 40px; /* Maintain spacing below the topic title */
+  transition: margin-left 0.5s ease-in-out; /* Smooth transition for position change */
+}
+
+.roadmap-container.modal-open {
+  align-items: flex-start; /* Align roadmap to the left when modal is open */
+  margin-left: 20px; /* Add margin to position it away from the edge */
+  width: 30%; /* Restrict the width to leave space for the modal */
 }
 
 .bot-marg {
@@ -44,7 +53,7 @@
 }
 
 .roadmap-block:hover {
-  background-color: #F6B285;
+  background-color: #f6b285;
   cursor: pointer;
 }
 
@@ -74,7 +83,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 70%;
+  width: 70%; /* Ensure modal takes up the remaining space */
   height: 100vh;
   background: white;
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
@@ -113,6 +122,14 @@
   border-radius: 8px;
   text-align: center;
   font-size: 16px;
+  text-decoration: none;
+  color: black;
+  transition: background-color 0.3s ease;
+}
+
+.subtopic:hover {
+  background-color: #e0e0e0;
+  cursor: pointer;
 }
 
 .modal-sheet.open {
