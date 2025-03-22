@@ -94,9 +94,11 @@ Example Output:
 
 
         //TODO: uncomment
-      navigate(`/roadmap/${topic}`, {
-        state: { roadmap: parsed, topic: topic },
-      });
+      //navigate(`/roadmap/${topic}`, {
+      //  state: { roadmap: parsed, topic: topic },
+      //});
+        //
+        navigate('/input1');
 
     } catch (error) {
       console.error("Error fetching data:", error);
