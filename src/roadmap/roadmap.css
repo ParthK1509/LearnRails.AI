@@ -88,6 +88,12 @@
   text-align: left;
 }
 
+.modal-content-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 20px;
+}
 .modal-content {
   display: flex;
   flex-direction: column;
@@ -120,4 +126,11 @@
   cursor: pointer;
   align-self: flex-end;
   padding: 10px;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
 }

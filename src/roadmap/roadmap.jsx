@@ -62,14 +62,24 @@ export function ModalSheet({ isOpen, onClose, step, subtopics }) {
         <button className="close-btn" onClick={onClose}>
           ✖
         </button>
-        <div className="modal-title">{step}</div>
-        <div className="modal-text">We Recommend Learning these Subtopics:</div>
-        <div className="modal-content">
-          {subtopics.map((subtopic, index) => (
-            <div key={index} className="subtopic">
-              {subtopic}
+        <div className="modal-content-container">
+          <div>
+            <div className="modal-title">{step}</div>
+            <div className="modal-text">
+              We Recommend Learning these Subtopics:
             </div>
-          ))}
+            <div className="modal-content">
+              {subtopics.map((subtopic, index) => (
+                <div key={index} className="subtopic">
+                  {subtopic}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="modal-buttons">
+            <button>Take Quiz</button>
+            <button>See Flash Cards</button>
+          </div>
         </div>
       </div>
     </div>
