@@ -151,3 +151,56 @@
 .submit-btn:active {
     background-color: #BDF68F;
 }
+
+/*MY style*/
+.topic-tile {
+    display: flex;
+    flex-direction: row;
+    align-items : center;
+    justify-content: space-between;
+}
+
+.exp-tiles {
+    display: flex;
+    flex-direction: row;
+    align-items : center;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.expTile {
+    padding: 0 10px;
+    margin: 0 10px;
+    min-width: 75px;
+    height: 32px;
+    vertical-align: middle;
+    background-color: #E9E9ED;
+    text-align: center;
+    line-height: 32px;
+    border: 0;
+    border-radius: 20px;
+    transition: background-color 0.1s ease;
+    transition: min-width 0.1s ease;
+}
+
+.expTile:active {
+    min-width: 70px;
+}
+
+.badTile.selected{
+    background-color: #E9B9B4;
+}
+
+.mediumTile.selected {
+    background-color: #FEF4D5;
+}
+
+.goodTile.selected {
+    background-color: #D3ECE0;
+}
+
+.questionName {
+    font-size: 1.2rem;
+    margin: 20px 0;
+    color: #6D6D6D;
+}

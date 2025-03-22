@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Check } from 'lucide-react';
 import './question-types-selector.css';
 import { useUserQuestionTypesStore } from '../stores/userQuestionTypes';
+import {Link} from  "react-router-dom";
 
 const questionTypes = [
     "Short Answer Quizzes", "Multiple Choice Questions", "True/False Quizzes", "Long Answer Quizzes"
@@ -50,9 +51,11 @@ export default function questionTypesSelector() {
                         );
                     })}
                 </div>
-                <button className="submit-btn" onClick={submitBtnPress}>
-                    Submit
-                </button>
+                <Link to={"/input2"}>
+        <button className="submit-btn" onClick={submitBtnPress}>
+        Submit
+        </button>
+                </Link>
             </div>
         </div>
     );
