@@ -6,7 +6,7 @@ import LinearProgress from "@mui/joy/LinearProgress";
 import Box from "@mui/joy/Box";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import FlashCards from "../home/flashcards";
-import {useRoadmapStore} from "../stores/roadmap.js";
+import {useMainTopicStore, useRoadmapStore} from "../stores/roadmap.js";
 
 export default function Roadmap() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,10 +15,7 @@ export default function Roadmap() {
   const location = useLocation();
 
     const roadmap = useRoadmapStore((state) => state.topics);
-  //const { roadmap, topic } = location.state;
-    //
-    //TODO: remove this
-    const topic = "hardcoded topic name";
+    const roadmaptopic = useMainTopicStore((state) => state.maintopic);
 
   const openModal = (step, value) => {
     console.log("Opening modal for step:", step);
@@ -31,8 +28,8 @@ export default function Roadmap() {
   return (
     <div>
       <div className="topic-title">
-        {String(topic).charAt(0).toUpperCase() +
-          String(topic).slice(1) +
+        {String(roadmaptopic).charAt(0).toUpperCase() +
+          String(roadmaptopic).slice(1) +
           " Roadmap"}
       </div>
       <div className="roadmap-container">
